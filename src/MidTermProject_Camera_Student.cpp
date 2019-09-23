@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <map>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -39,6 +40,11 @@ int main(int argc, const char *argv[])
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
     bool bVis = false;            // visualize results
+  
+  	std::map<std::string, int> mapKeyPointDetector;
+  	mapKeyPointDetector.insert(std::make_pair("SHITOMASI", 0));
+  	mapKeyPointDetector.insert(std::make_pair("HARRIS", 1));
+  	mapKeyPointDetector.insert(std::make_pair("FAST", 2));
 
     /* MAIN LOOP OVER ALL IMAGES */
 
@@ -62,6 +68,10 @@ int main(int argc, const char *argv[])
         // push image into data frame buffer
         DataFrame frame;
         frame.cameraImg = imgGray;
+      	if (dataBuffer.size() >= dataBufferSize)
+        {
+          dataBuffer.erase(dataBuffer.begin());
+        }
         dataBuffer.push_back(frame);
 
         //// EOF STUDENT ASSIGNMENT
@@ -71,19 +81,25 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "SHITOMASI";
+        //string detectorType = "SHITOMASI";
+      	string detectorType = "HARRIS";
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
         //// -> HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
-
-        if (detectorType.compare("SHITOMASI") == 0)
+      	
+      	switch (mapKeyPointDetector.find(detectorType)->second)
         {
-            detKeypointsShiTomasi(keypoints, imgGray, false);
-        }
-        else
-        {
-            //...
+        	case 0:
+            	detKeypointsShiTomasi(keypoints, imgGray, false);
+            	break;
+          	case 1:
+            	detKeypointsHarris(keypoints, imgGray, false);
+            	break;
+          	default:
+            	cout << "Detector type is not determined!" << endl;
+            	break;
+            
         }
         //// EOF STUDENT ASSIGNMENT
 
@@ -173,8 +189,13 @@ int main(int argc, const char *argv[])
                 string windowName = "Matching keypoints between two camera images";
                 cv::namedWindow(windowName, 7);
                 cv::imshow(windowName, matchImg);
-                cout << "Press key to continue to next image" << endl;
-                cv::waitKey(0); // wait for key to be pressed
+                cout << "Press key to continue to next image or ESC to quit"  << endl;
+                int key_pressed = cv::waitKey(0) & 255;
+                if (key_pressed == 27)
+                {
+                    //cv::destroyAllWindows();
+                    break;
+                }
             }
             bVis = false;
         }

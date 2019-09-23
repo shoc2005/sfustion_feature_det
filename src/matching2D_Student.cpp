@@ -101,3 +101,52 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
         cv::waitKey(0);
     }
 }
+
+void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	int blockSize = 4;
+  	int ksize = 3;
+  	double k = 0.04; // harris free parameter
+  	int borderType = cv::BorderTypes::BORDER_DEFAULT;
+  	cv::Mat outHarris;
+  	int thresh = 100;
+  
+  	/* apply Harris keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	cv::cornerHarris(img, outHarris, blockSize, ksize, k, borderType);
+  	cv::normalize( outHarris, outHarris, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat() );
+  
+  	/* get keypoints */
+  	for (int i = 0; i < outHarris.rows; ++i)
+    {
+      	for (int j = 0; j < outHarris.cols; ++j)
+        {
+          	if (outHarris.at<float>(i,j) >= thresh)
+            {
+              	cv::KeyPoint newKeyPoint;
+              	newKeyPoint.pt = cv::Point2f((float)j, (float)i);
+        		newKeyPoint.size = blockSize;
+        		keypoints.push_back(newKeyPoint);
+            }
+        }
+    }
+  
+  	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "Harris detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+  
+    // visualize results
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = "Harris Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+        
+      
+    }
+  	
+  
+}
+  
