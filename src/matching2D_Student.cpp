@@ -149,4 +149,54 @@ void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis
   	
   
 }
+
+void detKeypointsFast(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	int threshold = 100;
+  	bool nonmaxSuppression = false;
+  	//int type = cv::FastFeatureDetector::TYPE_9_16;
+  	//int type = cv::FastFeatureDetector::TYPE_7_12;
+  	//int type = cv::FastFeatureDetector::TYPE_5_8;
   
+    /* apply FAST keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	cv::FAST(img, keypoints, threshold, nonmaxSuppression);
+  
+  	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "Fast detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  
+  	// visualize results
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = "Fast Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+    }
+}
+
+void detKeypointsBrisk(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	cv::Ptr<cv::BRISK> detector;
+    int threshold = 30;        // FAST/AGAST detection threshold score.
+    int octaves = 3;           // detection octaves (use 0 to do single scale)
+    float patternScale = 1.0f; // apply this scale to the pattern used for sampling the neighbourhood of a keypoint.
+    detector = cv::BRISK::create(threshold, octaves, patternScale);
+  
+  	/* apply BRISK keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "BRISK detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = "BRISK Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+    }
+  
+}
