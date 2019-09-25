@@ -200,3 +200,91 @@ void detKeypointsBrisk(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
     }
   
 }
+
+void detKeypointsOrb(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	cv::Ptr<cv::ORB> detector;
+  	int nfeatures = 500;
+  	float scaleFactor = 1.2f; 
+  	int nlevels = 8;
+  	int edgeThreshold = 31;
+  	int firstLevel = 0;
+  	int WTA_K = 2;
+  	cv::ORB::ScoreType scoreType = cv::ORB::HARRIS_SCORE;
+  	int patchSize = 31;
+    int fastThreshold = 20;
+  	
+  	detector = cv::ORB::create(nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold);
+  	
+  	/* apply ORB keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "ORB detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  
+  	if (bVis)
+      {
+          cv::Mat visImage = img.clone();
+          cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+          string windowName = "ORB Detector Results";
+          cv::namedWindow(windowName, 6);
+          imshow(windowName, visImage);
+      }
+}
+
+void detKeypointsAkaze(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	cv::Ptr<cv::AKAZE> detector;
+    cv::AKAZE::DescriptorType descriptor_type = cv::AKAZE::DESCRIPTOR_MLDB;
+    int  descriptor_size = 0;
+    int  descriptor_channels = 3;
+    float  threshold = 0.001f;
+    int  nOctaves = 4;
+    int  nOctaveLayers = 4;
+    cv::KAZE::DiffusivityType diffusivity = cv::KAZE::DIFF_PM_G2;
+  
+  	detector = cv::AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers, diffusivity);
+  
+  /* apply AKAZE keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "AKAZE detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  
+  	if (bVis)
+      {
+          cv::Mat visImage = img.clone();
+          cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+          string windowName = "AKAZE Detector Results";
+          cv::namedWindow(windowName, 6);
+          imshow(windowName, visImage);
+      }
+  	
+}
+
+void detKeypointsSift(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+  	cv::Ptr<cv::xfeatures2d::SIFT> detector;
+  	int  nfeatures = 0;
+	int  nOctaveLayers = 3;
+	double  contrastThreshold = 0.04;
+	double  edgeThreshold = 10;
+	double  sigma = 1.6;
+    detector = cv::xfeatures2d::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+ 	
+  	/* apply SIFT keypoints detector */
+  	double t = (double)cv::getTickCount();
+  	detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "SIFT detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  
+  	if (bVis)
+      {
+          cv::Mat visImage = img.clone();
+          cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+          string windowName = "SIFT Detector Results";
+          cv::namedWindow(windowName, 6);
+          imshow(windowName, visImage);
+      }
+  	
+}

@@ -46,7 +46,9 @@ int main(int argc, const char *argv[])
   	mapKeyPointDetector.insert(std::make_pair("HARRIS", 1));
   	mapKeyPointDetector.insert(std::make_pair("FAST", 2));
   	mapKeyPointDetector.insert(std::make_pair("BRISK", 3));
-
+  	mapKeyPointDetector.insert(std::make_pair("ORB", 4)); 
+	mapKeyPointDetector.insert(std::make_pair("AKAZE", 5));
+  	mapKeyPointDetector.insert(std::make_pair("SIFT", 5)); 
     /* MAIN LOOP OVER ALL IMAGES */
 
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
@@ -83,7 +85,7 @@ int main(int argc, const char *argv[])
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
         //string detectorType = "SHITOMASI";
-      	string detectorType = "BRISK";
+      	string detectorType = "SIFT";
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -101,11 +103,19 @@ int main(int argc, const char *argv[])
             	detKeypointsFast(keypoints, imgGray, false);
             	break;
            	case 3:
-            	detKeypointsBrisk(keypoints, imgGray, true);
+            	detKeypointsBrisk(keypoints, imgGray, false);
             	break;
-
+            case 4:
+            	detKeypointsOrb(keypoints, imgGray, false);
+            	break;
+            case 5:
+            	detKeypointsAkaze(keypoints, imgGray, false);
+            	break;
+            case 6:
+            	detKeypointsSift(keypoints, imgGray, false);
+            	break;         
           	default:
-            	cout << "Detector type is not determined!" << endl;
+            	cout << "Detector is not determined!" << endl;
             	break;
             
         }
