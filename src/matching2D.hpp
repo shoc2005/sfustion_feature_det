@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <map>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
