@@ -133,9 +133,9 @@ int main(int argc, const char *argv[])
         {
           	for (auto& keypoint: keypoints)
             {
-              	if (
-                  	((&keypoint)->pt.x >= vehicleRect.x) && ((&keypoint)->pt.x <= (vehicleRect.x + vehicleRect.width)) &&
-                    ((&keypoint)->pt.y >= vehicleRect.y) && ((&keypoint)->pt.y <= (vehicleRect.y + vehicleRect.height))
+              	if (vehicleRect.contains((&keypoint)->pt)
+                  	//((&keypoint)->pt.x >= vehicleRect.x) && ((&keypoint)->pt.x <= (vehicleRect.x + vehicleRect.width)) &&
+                    //((&keypoint)->pt.y >= vehicleRect.y) && ((&keypoint)->pt.y <= (vehicleRect.y + vehicleRect.height))
                     )
                 {
                   filtered.push_back(keypoint);
