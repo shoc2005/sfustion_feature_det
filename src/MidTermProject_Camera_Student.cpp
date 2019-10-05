@@ -276,12 +276,12 @@ int main(int argc, const char *argv[])
               string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
               string descriptorType = "DES_HOG"; // DES_BINARY, DES_HOG
               string selectorType;
-              if (cm_used && (TASKID.compare("MP8") == 0 || TASKID.compare("MP7") == 0))
+              if (cm_used && (TASKID.compare("MP8") == 0 || TASKID.compare("MP9") == 0))
               {
-              	selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
+              	selectorType = "SEL_KNN";       // SEL_NN, SEL_KNN
               } else
               {
-                selectorType = "SEL_KNN";
+                selectorType = "SEL_NN";
               }
 
               //// STUDENT ASSIGNMENT
