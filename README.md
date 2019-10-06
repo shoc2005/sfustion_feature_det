@@ -31,13 +31,11 @@ The summary results are provided in the file 'summary.pdf' accordingly to raw da
 4. Run it: `./2D_feature_tracking`.
 
 ## Run instructions
-For simple run use: `./2D_feature_tracking`.
 
 For gathering statistics run: `../src/run_stat.sh`.
 
 For getting statistics of the number of detected keypoints run:`./2D_feature_tracking MP7`
 
-For getting statistics of the matched keypoints use:`./2D_feature_tracking MP8 DESCRIPTOR_NAME` (you should chose one of the: BRISK, BRIEF, ORB, FREAK, AKAZE, SIF)
+For getting statistics of the matched keypoints use:`./2D_feature_tracking MP8 DESCRIPTOR_NAME` (you should select one of the: BRISK, BRIEF, ORB, FREAK, AKAZE, SIF)
 
 For getting statistics of the matching time and keypoints detection time use: `./2D_feature_tracking MP9 DESCRIPTOR_NAME` (you should chose one of the: BRISK, BRIEF, ORB, FREAK, AKAZE, SIF)
-
