@@ -39,7 +39,7 @@ int main(int argc, const char *argv[])
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
-    bool bVis = false;            // visualize results
+    bool bVis = true;            // visualize results
   
   	std::map<std::string, int> mapKeyPointDetector;
   	mapKeyPointDetector.insert(std::make_pair("SHITOMASI", 0));
@@ -56,7 +56,7 @@ int main(int argc, const char *argv[])
   	string TASKID = "MP8"; // MP7, MP8, MP9
   	bool cm_used = false;
   	ofstream repf;
-  	if (argc <= 3 )
+  	if (argc >1 && argc <= 3)
     {
       cm_used = true;
       repf.open("summary.txt", std::ofstream::app);
@@ -253,6 +253,7 @@ int main(int argc, const char *argv[])
                		repf << "|" << imgIndex << " | " << it_detector->first << " | - | - |" << endl;
                 }
               }
+             cout << "Can`t make descriptors" << endl;
              continue;
           }
           if (TASKID.compare("MP9") == 0 && cm_used)
